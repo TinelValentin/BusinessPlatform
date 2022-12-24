@@ -21,6 +21,8 @@ public class UserDetailsEntity implements UserDetails {
 
     private String email;
 
+    private boolean isBusiness;
+
     private BusinessEntity business;
 
     @JsonIgnore
@@ -28,9 +30,10 @@ public class UserDetailsEntity implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsEntity(Long id, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsEntity(Long id, String username, String email,boolean isBusiness, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
+        this.isBusiness = isBusiness;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
@@ -46,6 +49,7 @@ public class UserDetailsEntity implements UserDetails {
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
+                user.getBusiness().getIdCode() =="INVALID",
                 user.getPassword(),
                 authorities);
     }

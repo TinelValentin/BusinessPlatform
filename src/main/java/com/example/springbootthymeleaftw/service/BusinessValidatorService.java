@@ -22,10 +22,6 @@ public class BusinessValidatorService implements Validator {
     public void validate(Object businessEntity, Errors errors) {
         BusinessEntity business = (BusinessEntity) businessEntity;
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "companyName", "business.isCompanyNameEmpty");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address", "business.isAddressEmpty");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "idCode", "business.isIdCodeEmpty");
-
         Boolean isValidCompanyNameLength = !(business.getCompanyName().length() >40);
         Boolean isAddressLength = !(business.getAddress().length() >40);
         Boolean isIdCodeLength = !(business.getIdCode().length() >40);
@@ -33,8 +29,8 @@ public class BusinessValidatorService implements Validator {
         if (!isValidCompanyNameLength)
             errors.rejectValue("companyName", "business.IncorrectLength");
         if (!isAddressLength)
-            errors.rejectValue("address", "user.IncorrectLength");
+            errors.rejectValue("address", "business.IncorrectLength");
         if(!isIdCodeLength)
-            errors.rejectValue("idCode", "user.IncorrectLength");
+            errors.rejectValue("idCode", "business.IncorrectLength");
     }
 }

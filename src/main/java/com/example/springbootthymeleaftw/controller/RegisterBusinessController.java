@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class RegisterBusinessController {
     private final UserValidatorService userValidatorService;
     private final BusinessValidatorService businessValidatorService;
+
     private final UserService userService;
 
     @GetMapping()
@@ -38,8 +39,8 @@ public class RegisterBusinessController {
         if (bindingResult.hasErrors())
             return "registerBusiness";
 
-       // userService.save(businessForm);
-       // userService.login(businessForm.getEmail(), userForm.getPassword());
+        userService.saveBusiness(userForm,businessForm);
+        userService.login(userForm.getEmail(), userForm.getPassword());
         return "index";
     }
 }

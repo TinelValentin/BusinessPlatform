@@ -1,7 +1,9 @@
 package com.example.springbootthymeleaftw.service;
 
+import com.example.springbootthymeleaftw.model.entity.BusinessEntity;
 import com.example.springbootthymeleaftw.model.entity.RoleEntity;
 import com.example.springbootthymeleaftw.model.entity.UserEntity;
+import com.example.springbootthymeleaftw.repository.BusinessRepository;
 import com.example.springbootthymeleaftw.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +25,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final BusinessRepository businessRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -48,8 +51,18 @@ public class UserService implements UserDetailsService {
 
     public void save(UserEntity user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        BusinessEntity userBusiness = businessRepository.findNonExistentBusiness();
+        user.setBusiness(userBusiness);
         userRepository.save(user);
     }
+
+    public void saveBusiness(UserEntity user,BusinessEntity business) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setBusiness(business);
+        businessRepository.save(business);
+        userRepository.save(user);
+    }
+
     public void login(String email, String password){
         UserDetails userDetails = this.loadUserByUsername(email);
 

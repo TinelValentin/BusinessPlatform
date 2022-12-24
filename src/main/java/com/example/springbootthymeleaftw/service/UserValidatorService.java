@@ -9,9 +9,6 @@ import org.springframework.validation.Validator;
 
 @Service
 public class UserValidatorService implements Validator {
-    @Autowired
-    private UserService userService;
-
     @Override
     public boolean supports(Class<?> aClass) {
         return UserEntity.class.equals(aClass);
