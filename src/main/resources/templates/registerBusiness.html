@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+      xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>Register business</title>
     <div th:include="fragments/components::header"></div>
 </head>
 
@@ -73,8 +73,7 @@
                        type="text"
                        class="form-control"
                        placeholder="Company Name"
-                       th:field="${businessForm.companyName}"
-                       autofocus="true">
+                       th:field="${businessForm.companyName}">
                 <label for="companyNameInput">Company Name</label>
                 <span class="has-error" th:if="${#fields.hasErrors('companyName')}" th:errors="${businessForm.companyName}"></span>
             </div>
@@ -85,8 +84,7 @@
                        type="text"
                        class="form-control"
                        placeholder="Company's address"
-                       th:field="${businessForm.address}"
-                       autofocus="true">
+                       th:field="${businessForm.address}">
                 <label for="addressInput">Address</label>
                 <span class="has-error" th:if="${#fields.hasErrors('address')}" th:errors="${businessForm.address}"></span>
             </div>
@@ -97,11 +95,22 @@
                        type="text"
                        class="form-control"
                        placeholder="Company's id code"
-                       th:field="${businessForm.idCode}"
-                       autofocus="true">
+                       th:field="${businessForm.idCode}">
                 <label for="idCodeInput">Id Code</label>
                 <span class="has-error" th:if="${#fields.hasErrors('idCode')}" th:errors="${businessForm.idCode}"></span>
             </div>
+
+                <div class="form-floating mb-3">
+                    <select id="businessType"
+                            name="businessType"
+                            class="form-control"
+                            th:field="${businessForm.businessType}"
+                            placeholder="Business type">
+                        <option value="BB">Warehouse</option>
+                        <option value="BC">Store</option>
+                    </select>
+                    <label for="businessType">Business type</label>
+                </div>
 
             <!-- Login/Register -->
             <div class="text-center text-lg-start mt-4 pt-2">

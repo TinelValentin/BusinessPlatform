@@ -15,14 +15,13 @@ import java.util.stream.Collectors;
 @Data
 @RequiredArgsConstructor
 public class UserDetailsEntity implements UserDetails {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     private Long id;
 
     private String username;
 
     private String email;
+
+    private BusinessEntity business;
 
     @JsonIgnore
     private String password;

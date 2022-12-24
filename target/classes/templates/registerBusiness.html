@@ -103,6 +103,19 @@
                 <span class="has-error" th:if="${#fields.hasErrors('idCode')}" th:errors="${businessForm.idCode}"></span>
             </div>
 
+                <div class="form-floating mb-3">
+                    <select id="businessType"
+                            name="businessType"
+                            class="form-control"
+                            th:field="${businessForm.businessType}"
+                            autofocus="true"
+                            placeholder="Business type">
+                        <option value="BB">Warehouse</option>
+                        <option value="BC">Store</option>
+                    </select>
+                    <label for="businessType">Business type</label>
+                </div>
+
             <!-- Login/Register -->
             <div class="text-center text-lg-start mt-4 pt-2">
                 <button class="btn btn-primary btn-lg"

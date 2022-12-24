@@ -31,6 +31,10 @@ public class BusinessEntity {
     @Column(name = "business_type")
     private String businessType;
 
+    @Basic
+    @Column(name = "approved")
+    private boolean approved;
+
     @ManyToMany(mappedBy = "business")
     @JsonIgnore
     private Collection<UserEntity> users;
