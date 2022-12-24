@@ -35,7 +35,7 @@ public class BusinessEntity {
     @Column(name = "approved")
     private boolean approved;
 
-    @ManyToMany(mappedBy = "business")
+    @OneToOne(mappedBy = "business")
     @JsonIgnore
-    private Collection<UserEntity> users;
+    private UserEntity users;
 }

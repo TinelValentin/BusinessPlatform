@@ -40,14 +40,7 @@ public class UserEntity {
     )
     private Collection<RoleEntity> roles;
 
-    @ManyToMany()
-    @JoinTable(
-            /* The table app_users_roles does not need representation in code */
-            name = "app_users_business",
-            joinColumns ={
-                    @JoinColumn(name = "app_user_id", referencedColumnName = "id")},
-            inverseJoinColumns ={
-                    @JoinColumn(name = "business_id", referencedColumnName = "id")}
-    )
-    private Collection<BusinessEntity> business;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "business_id", referencedColumnName = "id")
+    private BusinessEntity business;
 }
