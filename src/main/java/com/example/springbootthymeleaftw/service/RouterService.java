@@ -10,7 +10,13 @@ public class RouterService {
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        String role = authentication.getAuthorities().stream().findFirst().toString();
+        var firstRole = authentication.getAuthorities().stream().findFirst();
+        String role = "";
+
+        if(firstRole.isPresent())
+        {
+            role = firstRole.get().toString();
+        }
 
         return switch (role) {
             case "ROLE_BB" -> "bb";

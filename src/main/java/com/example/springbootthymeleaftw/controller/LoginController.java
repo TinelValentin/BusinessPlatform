@@ -44,7 +44,7 @@ public class LoginController {
 
        securityService.generateToken(email,password);
 
-       return "home/" +routerService.loginRoute();
+       return routerService.loginRoute();
     }
 
 

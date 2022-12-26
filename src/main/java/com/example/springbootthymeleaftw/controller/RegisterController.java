@@ -44,7 +44,7 @@ public class RegisterController {
         if (bindingResult.hasErrors())
             return "register";
 
-        String formRole =  Role.ROLE_CLIENT.toString();
+        String formRole =  Role.ROLE_ADMIN.toString();
         Collection<RoleEntity> roles = new HashSet<>();
 
         Optional<RoleEntity> userRole = roleRepository.findByName(formRole);

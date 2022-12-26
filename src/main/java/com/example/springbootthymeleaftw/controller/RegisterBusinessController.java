@@ -48,7 +48,7 @@ public class RegisterBusinessController {
         if (bindingResult.hasErrors())
             return "registerBusiness";
 
-        String formRole = Objects.equals(businessForm.getBusinessType(), "Warehouse") ? Role.ROLE_BB.toString() : Role.ROLE_BC.toString();
+        String formRole = Objects.equals(businessForm.getBusinessType(), "BB") ? Role.ROLE_BB.toString() : Role.ROLE_BC.toString();
         Collection<RoleEntity> roles = new HashSet<>();
         Optional<RoleEntity> userRole = roleRepository.findByName(formRole);
         userRole.ifPresent(roles::add);
