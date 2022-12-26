@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.transaction.Transactional;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,8 +40,15 @@ public class AdminController {
         return "admin";
     }
 
+
     @PostMapping()
-    public void approve(String id){
-    var a = id;
+    public String approve(Model model, String id) {
+        businessService.approveBusinessWithId(id);
+        var businessesToApprove = businessService.getAllNotApprovedBusinesses();
+        var name = securityService.getUsername();
+
+        model.addAttribute("businesses", Objects.requireNonNullElse(businessesToApprove, Collections.emptyList()));
+        model.addAttribute("user", name);
+        return "admin";
     }
 }
