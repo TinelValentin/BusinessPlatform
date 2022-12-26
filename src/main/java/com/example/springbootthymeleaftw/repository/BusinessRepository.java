@@ -11,8 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface BusinessRepository extends JpaRepository<BusinessEntity, Long> {
-    @Lock(LockModeType.READ)
-    @Query(value = "select b from business b where b.id = 1",
+    @Query(value = "select * from business b where b.id_code like 'INVALID'",
     nativeQuery = true)
     BusinessEntity findNonExistentBusiness();
 }

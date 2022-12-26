@@ -1,5 +1,6 @@
 package com.example.springbootthymeleaftw.model.entity;
 
+import com.example.springbootthymeleaftw.constant.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 

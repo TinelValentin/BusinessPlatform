@@ -1,5 +1,6 @@
 package com.example.springbootthymeleaftw.service;
 
+import com.example.springbootthymeleaftw.constant.Role;
 import com.example.springbootthymeleaftw.model.entity.BusinessEntity;
 import com.example.springbootthymeleaftw.model.entity.RoleEntity;
 import com.example.springbootthymeleaftw.model.entity.UserEntity;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -31,13 +33,16 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<UserEntity> optUser = userRepository.findByEmail(email);
+
         if (optUser.isPresent()) {
+            var test = userRepository.findRoleByEmail(email);
             UserEntity appUser = optUser.get();
+            test.ifPresent(System.out::print);
             return new User(
                     appUser.getUsername(), appUser.getPassword(), true, true, true, true,
                     /* User Roles */
                     Objects.isNull(appUser.getRoles()) ?
-                            new ArrayList(List.of(new SimpleGrantedAuthority("default")))
+                            new ArrayList<>(List.of(new SimpleGrantedAuthority("default")))
                             : appUser.getRoles()
                                 .stream()
                                 .map(RoleEntity::getName)
@@ -50,9 +55,10 @@ public class UserService implements UserDetailsService {
 
 
     public void save(UserEntity user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         BusinessEntity userBusiness = businessRepository.findNonExistentBusiness();
         user.setBusiness(userBusiness);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+
         userRepository.save(user);
     }
 

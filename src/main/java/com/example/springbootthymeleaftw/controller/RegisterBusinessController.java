@@ -1,7 +1,10 @@
 package com.example.springbootthymeleaftw.controller;
 
+import com.example.springbootthymeleaftw.constant.Role;
 import com.example.springbootthymeleaftw.model.entity.BusinessEntity;
+import com.example.springbootthymeleaftw.model.entity.RoleEntity;
 import com.example.springbootthymeleaftw.model.entity.UserEntity;
+import com.example.springbootthymeleaftw.repository.RoleRepository;
 import com.example.springbootthymeleaftw.service.BusinessValidatorService;
 import com.example.springbootthymeleaftw.service.UserService;
 import com.example.springbootthymeleaftw.service.UserValidatorService;
@@ -14,6 +17,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/registerBusiness")
 @RequiredArgsConstructor
@@ -22,6 +30,7 @@ public class RegisterBusinessController {
     private final BusinessValidatorService businessValidatorService;
 
     private final UserService userService;
+    private final RoleRepository roleRepository;
 
     @GetMapping()
     public String open(Model model){
@@ -38,6 +47,13 @@ public class RegisterBusinessController {
 
         if (bindingResult.hasErrors())
             return "registerBusiness";
+
+        String formRole = Objects.equals(businessForm.getBusinessType(), "Warehouse") ? Role.ROLE_BB.toString() : Role.ROLE_BC.toString();
+        Collection<RoleEntity> roles = new HashSet<>();
+        Optional<RoleEntity> userRole = roleRepository.findByName(formRole);
+        userRole.ifPresent(roles::add);
+
+        userForm.setRoles(roles);
 
         userService.saveBusiness(userForm,businessForm);
         userService.login(userForm.getEmail(), userForm.getPassword());

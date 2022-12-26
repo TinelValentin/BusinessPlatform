@@ -1,21 +1,26 @@
 package com.example.springbootthymeleaftw.controller;
 
+import com.example.springbootthymeleaftw.JWT.JwtResponse;
+import com.example.springbootthymeleaftw.model.entity.UserEntity;
 import com.example.springbootthymeleaftw.service.SecurityService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/login")
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class LoginController {
     private final SecurityService securityService;
 
     @GetMapping()
     public String open(Model model, String error, String logout){
+        model.addAttribute("user",new UserEntity());
         if (securityService.isAuthenticated()) {
             return "redirect:/";
         }
@@ -29,9 +34,12 @@ public class LoginController {
         return "login";
     }
 
-    @PostMapping("")
-    public String login(Model model, String error, String logout){
-        return "index";
+    @PostMapping("/")
+    public String login(Model model, @ModelAttribute("user") UserEntity user, String error, String logout){
+        var email = user.getEmail();
+        var password = user.getPassword();
+
+       securityService.generateToken(email,password);
     }
 
 
