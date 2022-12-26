@@ -19,9 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class SecurityService {
 
-    private String jwtToken;
-    @Autowired
-    private  AuthenticationManager authenticationManager;
+    private static String jwtToken;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -43,17 +41,12 @@ public class SecurityService {
         UserDetails userDetail = userService.loadUserByUsername(username);
 
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetail, password,userDetail.getAuthorities()));
-        this.jwtToken = jwtUtils.generateJwtToken(SecurityContextHolder.getContext().getAuthentication());
+        jwtToken = jwtUtils.generateJwtToken(SecurityContextHolder.getContext().getAuthentication());
 
-//        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        List<String> roles = userDetails.getAuthorities().stream()
-//                .map(GrantedAuthority::getAuthority)
-//                .collect(Collectors.toList());
-//
-//        return new JwtResponse(jwtToken,
-//                userDetails.getUsername(),
-//                "userDetails.getEmail()",
-//                roles);
     }
 
+    public String getUsername()
+    {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+    }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" xmlns="http://www.w3.org/1999/html">
 <head th:include="fragments/components::header">
 </head>
 
@@ -42,11 +42,11 @@
 
                 <!-- Login/Register -->
                 <div class="text-center text-lg-start mt-4 pt-2">
-                    <button class="btn btn-primary btn-lg"
+                    <a href="/admin" class="btn btn-primary btn-lg"
                             style="padding-left: 2.5rem; padding-right: 2.5rem;"
                             type="submit">
                         Log In
-                    </button>
+                    </a>
 
                     <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account?
                         <br>

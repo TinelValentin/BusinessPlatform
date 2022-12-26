@@ -1,10 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <div th:include="fragments/components::header"></div>
 </head>
 <body>
-<h1>ADmin</h1>
+<nav th:fragment="navbar" class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand">Admin page</a>
+        </div>
+    </div>
+</nav>
+
+<form action="#" th:action="@{/admin}">
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+        <tr style="margin-bottom: 100px">
+            <th> Company name</th>
+            <th> Business type</th>
+            <th> Company id code</th>
+            <th> Owner</th>
+            <th> Approve</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${businesses.size()==0}">
+            <td colspan="2"> No Books Available</td>
+        </tr>
+        <tr th:each="business : ${businesses}" style="border-bottom: 1pt solid black;margin-bottom: 40px;">
+            <td><span th:text="${business.companyName}"> Company name </span></td>
+            <td><span th:text="${business.businessType}"> Business type </span></td>
+            <td><span th:text="${business.idCode}"> Company id code </span></td>
+            <td><span th:text="${business.companyName}"> Owner </span></td>
+            <td>
+                <form method="POST" th:action="@{/admin}">
+                    <input type="hidden" name="id" th:value="${business.id}" />
+                    <button class="btn row justify-content-center" style="background:lightgreen " th:text="Approve"/>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
 </body>
 </html>
