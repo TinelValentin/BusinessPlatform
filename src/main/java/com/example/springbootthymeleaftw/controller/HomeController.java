@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeController {
     private final SecurityService securityService;
 
-    @GetMapping()
+    @GetMapping("/client")
     public String open(Model model, String error, String logout){
         if (!securityService.isAuthenticated()) {
-            return "login";
+            return "";
         }
 
         return "index";

@@ -2,6 +2,7 @@ package com.example.springbootthymeleaftw.controller;
 
 import com.example.springbootthymeleaftw.JWT.JwtResponse;
 import com.example.springbootthymeleaftw.model.entity.UserEntity;
+import com.example.springbootthymeleaftw.service.RouterService;
 import com.example.springbootthymeleaftw.service.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class LoginController {
     private final SecurityService securityService;
+
+    private final RouterService routerService;
 
     @GetMapping()
     public String open(Model model, String error, String logout){
@@ -40,6 +43,8 @@ public class LoginController {
         var password = user.getPassword();
 
        securityService.generateToken(email,password);
+
+       return "home/" +routerService.loginRoute();
     }
 
 
