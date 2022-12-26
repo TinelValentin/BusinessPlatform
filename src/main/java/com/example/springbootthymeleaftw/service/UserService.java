@@ -33,6 +33,12 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<UserEntity> optUser = userRepository.findByEmail(email);
+        Optional<Boolean> isAccountApproved = userRepository.isTheAccountApproved(email);
+        if(isAccountApproved.isPresent())
+        {
+            if(!isAccountApproved.get())
+                throw new UsernameNotFoundException(email);
+        }
 
         if (optUser.isPresent()) {
             var test = userRepository.findRoleByEmail(email);

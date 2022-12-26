@@ -56,7 +56,6 @@ public class RegisterBusinessController {
         userForm.setRoles(roles);
 
         userService.saveBusiness(userForm,businessForm);
-        userService.login(userForm.getEmail(), userForm.getPassword());
-        return "index";
+        return "redirect:/";
     }
 }

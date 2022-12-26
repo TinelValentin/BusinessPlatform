@@ -20,4 +20,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
             nativeQuery = true)
     Optional<String> findRoleByEmail(@Param("email") String email);
 
+    @Query(value = "select b.approved from app_user a inner join business b on a.business_id = b.id " +
+            "where a.email like :email",
+            nativeQuery = true)
+    Optional<Boolean> isTheAccountApproved(@Param("email")String email);
+
 }

@@ -53,12 +53,11 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/home")
-                //.failureUrl("/login-error") //if you want a separate page for failed auth.
+                //.failureUrl("login") //if you want a separate page for failed auth.
                 .permitAll()
                 .and()
                 .logout()
-                .logoutSuccessUrl("/login") //.hasroles .and ant matchers
+                .logoutSuccessUrl("/") //.hasroles .and ant matchers
                 .permitAll()
                 .and().exceptionHandling().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class).build();
