@@ -16,7 +16,7 @@ public class BusinessEntity {
     private Long id;
 
     @Basic
-    @Column(name = "company_name")
+    @Column(name = "company_name",unique = true)
     private String companyName;
 
     @Basic
@@ -24,7 +24,7 @@ public class BusinessEntity {
     private String address;
 
     @Basic
-    @Column(name = "id_code")
+    @Column(name = "id_code",unique = true)
     private String idCode;
 
     @Basic

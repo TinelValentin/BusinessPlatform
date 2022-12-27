@@ -19,10 +19,10 @@ public class RouterService {
         }
 
         return switch (role) {
-            case "ROLE_BB" -> "bb";
-            case "ROLE_BC" -> "bc";
+            case "ROLE_BB" -> "redirect:/bb";
+            case "ROLE_BC" -> "redirect:/bc";
             case "ROLE_ADMIN" -> "redirect:/admin";
-            default -> "client";
+            default -> "redirect:/client";
         };
     }
 }

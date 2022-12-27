@@ -15,16 +15,20 @@ import java.util.Optional;
 @Repository
 public interface BusinessRepository extends JpaRepository<BusinessEntity, Long> {
     @Query(value = "select * from business b where b.id_code like 'INVALID'",
-    nativeQuery = true)
+            nativeQuery = true)
     BusinessEntity findNonExistentBusiness();
 
     @Query(value = "select * from business b where b.approved = false",
             nativeQuery = true)
     Optional<List<BusinessEntity>> findAllNotApprovedBusinesses();
 
+    @Query(value = "select * from business b inner join app_user a on a.business_id=b.id where a.username like :username",
+            nativeQuery = true)
+    Optional<BusinessEntity> findBusinessEntitiesByUsername(@Param("username") String username);
+
     @Transactional
     @Modifying
     @Query(value = "update business set approved = true where id = :id",
             nativeQuery = true)
-    void approveBusinessWithId(@Param("id")Long id);
+    void approveBusinessWithId(@Param("id") Long id);
 }

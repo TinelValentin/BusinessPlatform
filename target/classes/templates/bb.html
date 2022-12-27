@@ -1,10 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <div th:include="fragments/components::header"></div>
 </head>
 <body>
-<h1>BB</h1>
+<nav th:fragment="navbar" class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand">Warehouse page</a>
+        </div>
+        <a style="color: white" th:href="@{/logout}">Logout</a>
+    </div>
+</nav>
+
+<form method="POST" th:action="@{/bb}" id="addProduct"
+      style="display: flex;flex-direction: column; justify-content: center;padding-top: 10px">
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+        <tr style="margin-bottom: 100px">
+            <th> Product</th>
+            <th> Description</th>
+            <th> Stock</th>
+            <th> Resupply</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${products.size()==0}">
+            <td colspan="2"> No Products Available</td>
+        </tr>
+        <tr th:each="product : ${products}" style="border-bottom: 1pt solid black;margin-bottom: 40px;">
+            <td><span th:text="${product.name}"> Product </span></td>
+            <td><span th:text="${product.description}"> Description </span></td>
+            <td><span th:text="${product.stock}"> Stock </span></td>
+            <td>
+                <form method="POST" th:action="@{/bb}" style="display: flex;flex-direction: column; justify-content: center;">
+                    <input type="hidden" name="id" th:value="${product.id}"/>
+                    <input type="text" id="add" placeholder="Add" style="width: 60px;">
+                    <button class="btn row justify-content-center" style="background:lightgreen; margin-left: 5px;height: 33px;width: 50px">+</button>
+                </form>
+            </td>
+        </tr>
+
+        <tr th:if="${addProduct}==true">
+
+            <td>
+                <input type="text" form="addProduct" id="addName" style="width: 100px;" th:field="${Product.name}"></td>
+
+            <td><input type="text" form="addProduct" id="addDescription" style="width: 100px;"
+                       th:field="${Product.description}"></td>
+
+            <td><input type="text" form="addProduct" id="addStock" style="width: 100px;" th:field="${Product.stock}">
+            </td>
+
+            <td>
+                <button class="btn" form="addProduct" type="submit"
+                        style="width: 70px;background: lightgreen;border-radius: 10px">
+                    Add
+                </button>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+    <button class="btn-primary" type="submit"
+            style="margin: auto;width: 200px;height: 35px; white;font-weight: bolder;border-radius: 20px ">Add a
+        new product
+    </button>
+</form>
 </body>
 </html>
