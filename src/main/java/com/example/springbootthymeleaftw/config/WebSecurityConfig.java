@@ -57,6 +57,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .permitAll()
                 .and()
                 .logout()
+                .logoutUrl("/logout")
                 .logoutSuccessUrl("/") //.hasroles .and ant matchers
                 .permitAll()
                 .and().exceptionHandling().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

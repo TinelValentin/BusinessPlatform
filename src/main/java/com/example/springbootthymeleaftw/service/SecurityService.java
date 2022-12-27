@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class SecurityService {
@@ -37,17 +38,20 @@ public class SecurityService {
         return authentication.isAuthenticated();
     }
 
-    public void generateToken(String username, String password)
-    {
+    public void generateToken(String username, String password) {
         UserDetails userDetail = userService.loadUserByUsername(username);
 
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetail, password,userDetail.getAuthorities()));
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetail, password, userDetail.getAuthorities()));
         jwtToken = jwtUtils.generateJwtToken(SecurityContextHolder.getContext().getAuthentication());
 
     }
 
-    public String getUsername()
-    {
+    public void logout() {
+        jwtToken = "";
+        SecurityContextHolder.getContext().setAuthentication(null);
+    }
+
+    public String getUsername() {
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     }
 }

@@ -50,8 +50,18 @@ public class LoginController {
     }
 
 
-    @GetMapping("/error")
-    public String error(Model model, String error, String logout){
+    @GetMapping("/logout")
+    public String logout(Model model){
+        securityService.logout();
+        model.addAttribute("user",new UserEntity());
+        model.addAttribute("message", "You have been logged out successfully.");
+        return "login";
+    }
+
+    @GetMapping("/login")
+    public String login(Model model, String error, String logout){
+        model.addAttribute("user",new UserEntity());
+        model.addAttribute("error", "Your username and password is invalid.");
         return "login";
     }
 

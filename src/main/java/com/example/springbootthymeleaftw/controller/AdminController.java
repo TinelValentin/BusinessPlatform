@@ -51,4 +51,10 @@ public class AdminController {
         model.addAttribute("user", name);
         return "admin";
     }
+
+    @PostMapping("/logout")
+    public String logout() {
+        securityService.logout();
+        return "login";
+    }
 }
