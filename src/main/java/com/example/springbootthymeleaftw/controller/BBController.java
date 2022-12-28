@@ -66,7 +66,7 @@ public class BBController {
 
     private void addAttributes(Model model) {
         var name = securityService.getUsername();
-        var allProducts = productService.getAllProductsofUser(name);
+        var allProducts = productService.getAllProductsofUserApproved(name);
 
         model.addAttribute("Product", null);
         model.addAttribute("products", Objects.requireNonNullElse(allProducts, Collections.emptyList()));

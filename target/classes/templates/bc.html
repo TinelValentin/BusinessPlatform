@@ -1,10 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <div th:include="fragments/components::header"></div>
 </head>
 <body>
-<h1>BC</h1>
+
+<nav th:fragment="navbar" class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container-fluid">
+        <div class="navbar-header" style="display: flex;flex-direction: row">
+            <a class="navbar-brand">Store page</a>
+            <th:block th:if="${showInventory}==false">
+                <form method="post" th:action="@{bc/showInventory}">
+                    <button type="submit" class="btn btn-info"
+                            style="background: transparent;color: white;border: transparent">Inventory
+                    </button>
+                </form>
+            </th:block>
+
+            <th:block th:if="${showInventory}==true">
+                <form method="post" th:action="@{bc/showStores}">
+                    <button type="submit" class="btn btn-info"
+                            style="background: transparent;color: white;border: transparent">Buy
+                    </button>
+                </form>
+            </th:block>
+        </div>
+        <a style="color: white" th:href="@{/logout}">Logout</a>
+    </div>
+</nav>
+
+<th:block th:if="${showInventory}==false">
+    <h1 style="horiz-align: center">Resupply</h1>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px">
+        <thead>
+        <tr style="margin-bottom: 100px">
+            <th> Product</th>
+            <th> Description</th>
+            <th> Stock</th>
+            <th> Warehouse</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${bbProducts.size()==0}">
+            <td colspan="2"> No Products Available</td>
+        </tr>
+        <tr th:each="product : ${bbProducts}" style="border-bottom: 1pt solid black;margin-bottom: 40px;">
+            <td><span th:text="${product.name}"> Product </span></td>
+            <td><span th:text="${product.description}"> Description </span></td>
+            <td><span th:text="${product.stock}"> Stock </span></td>
+            <td><span th:text="${product.business.companyName}"> Warehouse </span></td>
+
+            <td>
+                <form method="POST" th:action="@{/bc/add/__${product.id}__}"
+                      style="display: flex;flex-direction: row; justify-content: center;">
+                    <input type="hidden" name="id" th:value="${product.id}"/>
+                    <input type="number" th:name="stock" placeholder="Buy" style="width: 60px;">
+                    <button type="submit" class="btn row justify-content-center"
+                            style="background:lightgreen; margin-left: 5px;height: 33px;width: 50px">+
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>
+
+<th:block th:if="${showInventory}==true">
+    <h1 style="horiz-align: center">Inventory</h1>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px">
+        <thead>
+        <tr style="margin-bottom: 100px">
+            <th> Product</th>
+            <th> Description</th>
+            <th> Stock</th>
+            <th> Warehouse</th>
+            <th> Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${inventoryProducts.size()==0}">
+            <td colspan="2"> No Products Available</td>
+        </tr>
+        <tr th:each="product : ${inventoryProducts}" style="border-bottom: 1pt solid black;margin-bottom: 40px;">
+            <td><span th:text="${product.name}"> Product </span></td>
+            <td><span th:text="${product.description}"> Description </span></td>
+            <td><span th:text="${product.stock}"> Stock </span></td>
+            <td><span th:text="${product.business.companyName}"> Warehouse </span></td>
+            <td>
+                <th:block th:if="${product.approved}==null">
+                    <span>Approved</span>
+                </th:block>
+
+                <th:block th:if="${product.approved}!=null">
+                    <span th:text="${product.approved}"></span>
+                </th:block>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</th:block>
 </body>
 </html>

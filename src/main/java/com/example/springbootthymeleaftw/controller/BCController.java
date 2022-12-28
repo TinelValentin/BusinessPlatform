@@ -43,8 +43,10 @@ public class BCController {
         return "redirect:/bc";
     }
 
-    public void addAttributes(Model model) {
-
+    @PostMapping(value = "/add/{id}")
+    public String restock(@PathVariable Long id, Model model, int stock) {
+        productService.buyFromBBToBC(id, stock,securityService.getUsername());
+        return "redirect:/bc";
     }
 
 }

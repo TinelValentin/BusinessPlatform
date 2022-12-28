@@ -13,14 +13,18 @@
         <div class="navbar-header" style="display: flex;flex-direction: row">
             <a class="navbar-brand">Store page</a>
             <th:block th:if="${showInventory}==false">
-            <form method="post" th:action="@{bc/showInventory}">
-                <button type="submit" class="btn btn-info" style="background: transparent;color: white;border: transparent">Inventory</button>
-            </form>
+                <form method="post" th:action="@{bc/showInventory}">
+                    <button type="submit" class="btn btn-info"
+                            style="background: transparent;color: white;border: transparent">Inventory
+                    </button>
+                </form>
             </th:block>
 
             <th:block th:if="${showInventory}==true">
                 <form method="post" th:action="@{bc/showStores}">
-                    <button type="submit" class="btn btn-info" style="background: transparent;color: white;border: transparent">Buy</button>
+                    <button type="submit" class="btn btn-info"
+                            style="background: transparent;color: white;border: transparent">Buy
+                    </button>
                 </form>
             </th:block>
         </div>
@@ -74,6 +78,7 @@
             <th> Description</th>
             <th> Stock</th>
             <th> Warehouse</th>
+            <th> Status</th>
         </tr>
         </thead>
         <tbody>
@@ -85,6 +90,15 @@
             <td><span th:text="${product.description}"> Description </span></td>
             <td><span th:text="${product.stock}"> Stock </span></td>
             <td><span th:text="${product.business.companyName}"> Warehouse </span></td>
+            <td>
+                <th:block th:if="${product.approved}==null">
+                    <span>Approved</span>
+                </th:block>
+
+                <th:block th:if="${product.approved}!=null">
+                    <span>Pending</span>
+                </th:block>
+            </td>
 
         </tr>
         </tbody>

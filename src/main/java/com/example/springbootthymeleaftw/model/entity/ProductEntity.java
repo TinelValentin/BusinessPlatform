@@ -26,6 +26,10 @@ public class ProductEntity {
     @Column(name = "stock")
     private int stock;
 
+    @Basic
+    @Column(name = "approved")
+    private String approved;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "business_id", referencedColumnName = "id")
     private BusinessEntity business;
