@@ -37,4 +37,10 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     @Query(value = "Select p.stock from product p where p.id = :id ",nativeQuery = true)
     int getStockWithId(@Param("id")Long id);
 
+    @Query(value = "Select * from product p inner join business b " +
+            "on p.business_id = b.id " +
+            "where business_type like 'BB'; ",nativeQuery = true)
+    Optional<List<ProductEntity>> findAllProductsFromBB();
+
+
 }

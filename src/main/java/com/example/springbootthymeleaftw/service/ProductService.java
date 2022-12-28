@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -38,6 +39,12 @@ public class ProductService {
         int stockSaved = productRepository.getStockWithId(id);
         int newStock = stockSaved + stock;
         productRepository.updateStock(newStock, id);
+    }
+
+    public List<ProductEntity> getAllBBProducts()
+    {
+        var products = productRepository.findAllProductsFromBB();
+        return products.orElse(Collections.emptyList());
     }
 
     public boolean ValidateProduct(ProductEntity productEntity) {
