@@ -24,6 +24,13 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
             nativeQuery = true)
     Optional<List<ProductEntity>> findAllByUsernameApproved(@Param("username") String username);
 
+    @Query(value = "Select p.id,p.name,p.description,p.stock,p.business_id,p.approved from product p " +
+            "inner join business b on p.business_id =b.id " +
+            "inner join app_user a on a.business_id = b.id " +
+            " where  p.approved like :companyName",
+            nativeQuery = true)
+    Optional<List<ProductEntity>> findAllProductsToApprove(@Param("companyName") String companyName);
+
     @Query(value = "select p.id,p.description,p.name,p.stock,p.approved,p.business_id from product p " +
             "inner join business b on p.business_id = b.id " +
             "inner join app_user a on a.business_id = b.id " +

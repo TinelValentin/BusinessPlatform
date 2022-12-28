@@ -69,15 +69,26 @@ public class ProductService {
         var product = productRepository.findProductEntityById(productId);
         if(business.isPresent()&&product.isPresent())
         {
-            String companyName = business.get().getCompanyName();
+            String productCompany = product.get().getBusiness().getCompanyName();
 
                 productRepository.insertProduct(
                         product.get().getName(),
                         product.get().getDescription(),
                         amount,
                         business.get().getId(),
-                        companyName
+                        productCompany
                 );
         }
+    }
+
+    public List<ProductEntity> getAllProductsToApprove(String username)
+    {
+        var business = businessRepository.findBusinessEntitiesByUsername(username);
+        if(business.isPresent())
+        {
+            var productsExists = productRepository.findAllProductsToApprove(business.get().getCompanyName());
+            return productsExists.orElse(Collections.emptyList());
+        }
+        return  Collections.emptyList();
     }
 }

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <div th:include="fragments/components::header"></div>
+</head>
+<body>
+<nav th:fragment="navbar" class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand">Warehouse approval</a>
+        </div>
+        <a style="color: white" th:href="@{/logout}">Logout</a>
+    </div>
+</nav>
+
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px">
+        <thead>
+        <tr style="margin-bottom: 100px">
+            <th> Product</th>
+            <th> Description</th>
+            <th> Stock</th>
+            <th> Approve</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${products.size()==0}">
+            <td colspan="2"> No Products Available</td>
+        </tr>
+        <tr th:each="product : ${products}" style="border-bottom: 1pt solid black;margin-bottom: 40px;">
+            <td><span th:text="${product.name}"> Product </span></td>
+            <td><span th:text="${product.description}"> Description </span></td>
+            <td><span th:text="${product.stock}"> Stock </span></td>
+            <td>
+                <form method="POST"  th:action="@{/bbApp/add/__${product.id}__}" style="display: flex;flex-direction: row; justify-content: center;">
+                    <input  type="hidden" name="id" th:value="${product.id}"/>
+                    <button  type="submit" class="btn row justify-content-center" style="background:lightgreen; margin-left: 5px;height: 33px;width: 100px">Approve</button>
+                </form>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</body>
+</html>
