@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.Objects;
@@ -35,24 +32,43 @@ public class BBController {
         return "bb";
     }
 
+    @GetMapping("/error")
+    public String error(Model model) {
+
+        addAttributes(model);
+        model.addAttribute("addProduct", false);
+        model.addAttribute("error", true);
+        return "bb";
+    }
+
     @PostMapping()
-    public String addProductForm(Model model,@ModelAttribute("Product") ProductEntity productForm) {
-        if(productForm.getName()!=null && productForm.getDescription()!=null)
-        {
-            productService.addProduct(productForm,securityService.getUsername());
+    public String addProductForm(Model model, @ModelAttribute("Product") ProductEntity productForm) {
+        model.addAttribute("addProduct", true);
+        if (productForm.getName() != null && productForm.getDescription() != null) {
+            if (!productService.ValidateProduct(productForm)) {
+                return "redirect:/bb/error";
+            }
+            productService.addProduct(productForm, securityService.getUsername());
+            model.addAttribute("addProduct", false);
         }
 
         addAttributes(model);
-        model.addAttribute("addProduct", true);
-        model.addAttribute("Product",new ProductEntity());
+        model.addAttribute("Product", new ProductEntity());
         return "bb";
+    }
+
+    @PostMapping(value = "/add/{id}")
+    public String restock(@PathVariable Long id, Model model, int stock) {
+        productService.updateStock(id, stock);
+        addAttributes(model);
+        return "redirect:/bb";
     }
 
     private void addAttributes(Model model) {
         var name = securityService.getUsername();
         var allProducts = productService.getAllProductsofUser(name);
 
-        model.addAttribute("Product",null);
+        model.addAttribute("Product", null);
         model.addAttribute("products", Objects.requireNonNullElse(allProducts, Collections.emptyList()));
         model.addAttribute("user", name);
     }

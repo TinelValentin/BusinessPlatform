@@ -28,4 +28,13 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     nativeQuery = true)
     void insertProduct(@Param("name") String name, @Param("description")
     String description, @Param("stock") int stock, @Param("business_id") Long business_id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "Update product p set stock = :stock where p.id = :id ",nativeQuery = true)
+    void updateStock(@Param("stock")int stock,@Param("id")Long id);
+
+    @Query(value = "Select p.stock from product p where p.id = :id ",nativeQuery = true)
+    int getStockWithId(@Param("id")Long id);
+
 }
