@@ -1,10 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <div th:include="fragments/components::header"></div>
 </head>
 <body>
-<h1>Client</h1>
+<nav th:fragment="navbar" class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container-fluid">
+        <div style="margin: auto" class="navbar-header">
+
+        </div>
+        <a style="color: white" th:href="@{/logout}">Logout</a>
+    </div>
+</nav>
+<div style="background: lightgrey;height: 100%;width: 150px;horiz-align: left;position: fixed">
+    <form method="POST" id="filterForm" th:action="@{/client/filter}" th:object="${businesses}" >
+        <input  type="hidden" name="businesses" th:value="${businesses}"/>
+        <div th:each="business: ${businesses}" style="display: flex;flex-direction: column; justify-content: start;">
+            <div style="display: inline-flex">
+                <input form="filterForm" id="checkboxBusiness" type="checkbox" th:checked="${business.value}"/>
+<!--                th:checked="${filters[iter.index]}"-->
+                <label  for="checkboxBusiness"><span th:text="${business.key}"></span></label>
+            </div>
+        </div>
+        <button type="submit" style="border-radius: 10px;background: dimgray">Filter</button>
+    </form>
+</div>
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;margin-left: 150px;">
+    <thead>
+    <tr style="margin-bottom: 100px">
+        <th> Product</th>
+        <th> Description</th>
+        <th> Stock</th>
+        <th> Store</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${products.size()==0}">
+        <td colspan="2"> No Products Available</td>
+    </tr>
+    <tr th:each="product : ${products}" style="border-bottom: 1pt solid black;margin-bottom: 40px;">
+        <td><span th:text="${product.name}"> Product </span></td>
+        <td><span th:text="${product.description}"> Description </span></td>
+        <td><span th:text="${product.stock}"> Stock </span></td>
+        <td><span th:text="${product.business.companyName}"> Warehouse </span></td>
+        <td>
+            <form method="POST" th:action="@{/client/add/__${product.id}__}"
+                  style="display: flex;flex-direction: row; justify-content: center;">
+                <input type="hidden" name="id" th:value="${product.id}"/>
+                <button type="submit" class="btn row justify-content-center"
+                        style="background:lightgreen; margin-left: 5px;height: 33px;width: 100px">Buy
+                </button>
+            </form>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

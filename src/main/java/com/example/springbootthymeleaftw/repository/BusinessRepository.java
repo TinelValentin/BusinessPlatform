@@ -22,6 +22,10 @@ public interface BusinessRepository extends JpaRepository<BusinessEntity, Long> 
             nativeQuery = true)
     Optional<List<BusinessEntity>> findAllNotApprovedBusinesses();
 
+    @Query(value = "select distinct  business.company_name  from business where business.business_type like 'BC' ",
+            nativeQuery = true)
+    Optional<List<String>> findAllBBBusinesses();
+
     @Query(value = "select * from business b inner join app_user a on a.business_id=b.id where a.username like :username",
             nativeQuery = true)
     Optional<BusinessEntity> findBusinessEntitiesByUsername(@Param("username") String username);

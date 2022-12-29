@@ -54,6 +54,11 @@ public class ProductService {
         return products.orElse(Collections.emptyList());
     }
 
+    public List<ProductEntity> getAllBCProducts() {
+        var products = productRepository.findAllProductsFromBC();
+        return products.orElse(Collections.emptyList());
+    }
+
     public boolean ValidateProduct(ProductEntity productEntity) {
         boolean isNameValid = productEntity.getName().length() > 0 && productEntity.getName().length() < 20;
         boolean isDescriptionValid = productEntity.getDescription().length() > 0 && productEntity.getName().length() < 40;
@@ -114,4 +119,6 @@ public class ProductService {
         }
         return false;
     }
+
+
 }

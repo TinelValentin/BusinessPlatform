@@ -44,7 +44,7 @@ public class RegisterController {
         if (bindingResult.hasErrors())
             return "register";
 
-        String formRole =  Role.ROLE_ADMIN.toString();
+        String formRole =  Role.ROLE_CLIENT.toString();
         Collection<RoleEntity> roles = new HashSet<>();
 
         Optional<RoleEntity> userRole = roleRepository.findByName(formRole);
@@ -52,7 +52,6 @@ public class RegisterController {
 
         userForm.setRoles(roles);
         userService.save(userForm);
-        userService.login(userForm.getEmail(), userForm.getPassword());
-        return "index";
+        return "redirect:/";
     }
 }
