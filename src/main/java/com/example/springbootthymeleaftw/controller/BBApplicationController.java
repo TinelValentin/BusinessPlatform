@@ -26,8 +26,19 @@ public class BBApplicationController {
 
         String name = securityService.getUsername();
         var allProducts = productService.getAllProductsToApprove(name);
-        model.addAttribute("products",allProducts);
+        model.addAttribute("products", allProducts);
         return "bbApp";
+    }
+
+    @PostMapping(value = "/add/{id}")
+    public String restock(@PathVariable Long id, Model model) {
+        String name = securityService.getUsername();
+
+        productService.approveBCCommand(id, name);
+
+        var allProducts = productService.getAllProductsToApprove(name);
+        model.addAttribute("products", allProducts);
+        return "redirect:/bb";
     }
 
 }

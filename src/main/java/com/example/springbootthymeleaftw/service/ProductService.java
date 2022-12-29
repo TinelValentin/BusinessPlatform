@@ -49,8 +49,7 @@ public class ProductService {
         productRepository.updateStock(newStock, id);
     }
 
-    public List<ProductEntity> getAllBBProducts()
-    {
+    public List<ProductEntity> getAllBBProducts() {
         var products = productRepository.findAllProductsFromBB();
         return products.orElse(Collections.emptyList());
     }
@@ -63,32 +62,56 @@ public class ProductService {
         return isStockValid && isDescriptionValid && isNameValid;
     }
 
-    public void buyFromBBToBC(Long productId,int amount,String username)
-    {
+    public void buyFromBBToBC(Long productId, int amount, String username) {
         var business = businessRepository.findBusinessEntitiesByUsername(username);
         var product = productRepository.findProductEntityById(productId);
-        if(business.isPresent()&&product.isPresent())
-        {
+        if (business.isPresent() && product.isPresent()) {
             String productCompany = product.get().getBusiness().getCompanyName();
 
-                productRepository.insertProduct(
-                        product.get().getName(),
-                        product.get().getDescription(),
-                        amount,
-                        business.get().getId(),
-                        productCompany
-                );
+            productRepository.insertProduct(
+                    product.get().getName(),
+                    product.get().getDescription(),
+                    amount,
+                    business.get().getId(),
+                    productCompany
+            );
         }
     }
 
-    public List<ProductEntity> getAllProductsToApprove(String username)
-    {
+    public List<ProductEntity> getAllProductsToApprove(String username) {
         var business = businessRepository.findBusinessEntitiesByUsername(username);
-        if(business.isPresent())
-        {
+        if (business.isPresent()) {
             var productsExists = productRepository.findAllProductsToApprove(business.get().getCompanyName());
             return productsExists.orElse(Collections.emptyList());
         }
-        return  Collections.emptyList();
+        return Collections.emptyList();
+    }
+
+    public boolean approveBCCommand(Long productId, String username) {
+        var business = businessRepository.findBusinessEntitiesByUsername(username);
+        var product = productRepository.findProductEntityById(productId);
+        if (product.isPresent() && business.isPresent()) {
+            var originalProduct = productRepository.findOriginalProductByNameAndApprove(product.get().getName(), business.get().getId());
+            if (originalProduct.isPresent()) {
+                if (product.get().getStock() > originalProduct.get().getStock())
+                    return false;
+
+                int newStock =originalProduct.get().getStock() - product.get().getStock();
+                productRepository.updateStock(newStock,originalProduct.get().getId());
+
+                var storeHasTheItem =productRepository.FindBusinessHasProduct(product.get().getName(),product.get().getBusiness().getId());
+                if(storeHasTheItem.isPresent())
+                {
+                    int stockNew =storeHasTheItem.get().getStock() + product.get().getStock();
+
+                    productRepository.updateStock(stockNew,storeHasTheItem.get().getId());
+                    productRepository.deleteById(product.get().getId());
+                }
+                else {
+                    productRepository.approveApplicationBC(product.get().getId());
+                }
+            }
+        }
+        return false;
     }
 }

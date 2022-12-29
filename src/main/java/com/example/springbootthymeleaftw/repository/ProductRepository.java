@@ -17,6 +17,10 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
     Optional<ProductEntity> findProductEntityById(Long id);
 
+    @Modifying
+    @Transactional
+    void deleteById(Long id);
+
     @Query(value = "select p.id,p.description,p.name,p.stock,p.approved,p.business_id from product p " +
             "inner join business b on p.business_id = b.id " +
             "inner join app_user a on a.business_id = b.id " +
@@ -38,6 +42,11 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
             nativeQuery = true)
     Optional<List<ProductEntity>> findAllByUsername(@Param("username") String username);
 
+    @Query(value = "Select * from product p " +
+            "where p.name like :productName and p.business_id= :id and p.approved is NULL",
+            nativeQuery = true)
+    Optional<ProductEntity> findOriginalProductByNameAndApprove(@Param("productName") String productName, @Param("id")Long businessId);
+
     //The repository save method is acting really weird so this is the backup
     @Transactional
     @Modifying
@@ -52,6 +61,11 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     @Query(value = "Update product p set stock = :stock where p.id = :id ", nativeQuery = true)
     void updateStock(@Param("stock") int stock, @Param("id") Long id);
 
+    @Modifying
+    @Transactional
+    @Query(value = "Update product p set approved = NULL where p.id = :id ", nativeQuery = true)
+    void approveApplicationBC(@Param("id") Long productId);
+
     @Query(value = "Select p.stock from product p where p.id = :id ", nativeQuery = true)
     int getStockWithId(@Param("id") Long id);
 
@@ -65,10 +79,9 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     @Query(value = "Update product p set stock = stock- :amount where p.id = :id", nativeQuery = true)
     void sellStocksWithId(@Param("id") Long productId, @Param("amount") int amount);
 
-    @Query(value = "select p.id,p.name,p.description,p.stock,p.business_id from product p " +
-            "inner join business b on p.business_id = b.id " +
-            "where b.company_name like :companyName and p.name like :productName", nativeQuery = true)
-    Optional<List<ProductEntity>> checkStoreHasProduct(@Param("companyName") String companyName, @Param("productName") String productName);
+    @Query(value = "Select * from product p " +
+            "where p.name like :productName and p.business_id = :businessId and p.approved is Null;", nativeQuery = true)
+    Optional<ProductEntity> FindBusinessHasProduct(@Param("productName") String productName, @Param("businessId") Long businessId);
 
 
 }
