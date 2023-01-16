@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 @RequestMapping("/")
 @RequiredArgsConstructor
@@ -40,11 +43,13 @@ public class LoginController {
     }
 
     @PostMapping("/")
-    public String login(Model model, @ModelAttribute("user") UserEntity user, String error, String logout){
+    public String login(Model model, @ModelAttribute("user") UserEntity user, String error, HttpServletResponse response, HttpServletRequest request){
         var email = user.getEmail();
         var password = user.getPassword();
 
-       securityService.generateToken(email,password);
+       String token = securityService.generateToken(email,password);
+       request.setAttribute("Authorization",token);
+        response.addHeader("Authorization", "test");
 
        return routerService.loginRoute();
     }

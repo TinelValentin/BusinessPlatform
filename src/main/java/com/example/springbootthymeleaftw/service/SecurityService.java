@@ -31,20 +31,32 @@ public class SecurityService {
         return authentication.isAuthenticated();
     }
 
-    public void generateToken(String username, String password) {
+    public String generateToken(String username, String password) {
         UserDetails userDetail = userService.loadUserByUsername(username);
 
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetail, password, userDetail.getAuthorities()));
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetail, null, userDetail.getAuthorities()));
         jwtToken = jwtUtils.generateJwtToken(SecurityContextHolder.getContext().getAuthentication());
 
+        return jwtToken;
+
+    }
+
+    public String getAuthentificationToken()
+    {
+        if(jwtToken==null|| jwtToken.equals(""))
+        {
+            return "";
+        }
+        return "Bearer "+jwtToken;
     }
 
     public void logout() {
         jwtToken = "";
-        SecurityContextHolder.getContext().setAuthentication(null);
+        SecurityContextHolder.clearContext();
     }
 
     public String getUsername() {
-        return jwtUtils.getUserNameFromJwtToken(jwtToken);
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 }

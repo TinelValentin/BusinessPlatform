@@ -8,6 +8,7 @@ import com.example.springbootthymeleaftw.service.ProductService;
 import com.example.springbootthymeleaftw.service.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,27 +26,46 @@ public class ClientController {
 
     @Autowired
     private final SecurityService securityService;
+
+    @Autowired
     private final ProductService productService;
 
     private final BusinessService businessService;
 
+    @PreAuthorize("hasAuthority('ROLE_CLIENT')")
     @GetMapping()
     public String open(Model model) {
-        var products = productService.getAllBCProducts();
-        var businesses = businessService.findAllBuinessesBB();
-        List<Boolean> checkedFilters=new ArrayList<>(Arrays.asList(new Boolean[businesses.size()]));
-        Collections.fill(checkedFilters, Boolean.TRUE);
-        Map<String, Boolean> checkboxData = Helper.createMapFromLists(businesses,checkedFilters);
-        model.addAttribute("products", products);
-        model.addAttribute("businesses", checkboxData);
+        setModel(model);
         return "client";
     }
 
+    @PreAuthorize("hasAuthority('ROLE_CLIENT')")
     @PostMapping("/filter")
-    public String filter(Model model, Map<String, Boolean> businesses)
+    public String filter(Model model, @RequestParam List<String> selectFilter)
     {
-        var a = 10;
+        var products =productService.getAllBCProductsWithNames(selectFilter);
+        var businesses = businessService.findAllBuinessesBB();
+        model.addAttribute("products", products);
+        model.addAttribute("businesses", businesses);
         return "client";
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_CLIENT')")
+    @PostMapping("/buy/{id}")
+    public String buyProduct(Model model,@PathVariable Long id, int quantity)
+    {
+        productService.buyStock(id,quantity);
+        setModel(model);
+
+        return "redirect:/client";
+    }
+
+    private void setModel(Model model) {
+        var products = productService.getAllBCProducts();
+        var businesses = businessService.findAllBuinessesBB();
+
+        model.addAttribute("products", products);
+        model.addAttribute("businesses", businesses);
     }
 
 

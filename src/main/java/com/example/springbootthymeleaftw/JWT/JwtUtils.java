@@ -1,8 +1,11 @@
 package com.example.springbootthymeleaftw.JWT;
 
+import com.example.springbootthymeleaftw.repository.UserRepository;
+import com.example.springbootthymeleaftw.service.UserService;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,12 +23,18 @@ public class JwtUtils {
     @Value("${jwt.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
+    @Autowired
+    UserService userService;
+    public JwtUtils() {
+    }
+
     public String generateJwtToken(Authentication authentication) {
 
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+        var email = userService.loadUserByName(userPrincipal.getUsername()).getUsername();
 
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
+                .setSubject((email))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)

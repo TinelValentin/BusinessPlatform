@@ -8,11 +8,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="SpringBoot-Thymeleaf-TW" />
+        <module name="BusinessPlatform" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="BusinessPlatform" options="-parameters" />
       <module name="SpringBoot-Thymeleaf-TW" options="-parameters" />
     </option>
   </component>

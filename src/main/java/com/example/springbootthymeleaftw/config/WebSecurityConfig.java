@@ -2,14 +2,17 @@ package com.example.springbootthymeleaftw.config;
 
 import com.example.springbootthymeleaftw.JWT.AuthEntryPointJwt;
 import com.example.springbootthymeleaftw.JWT.AuthTokenFilter;
+import com.example.springbootthymeleaftw.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,6 +26,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableGlobalMethodSecurity(prePostEnabled = true,
+        securedEnabled = true,
+        jsr250Enabled = true)
 public class WebSecurityConfig implements WebMvcConfigurer {
     private static final String[] METHODS_ALLOWED = {
             HttpMethod.GET.name(),
@@ -31,6 +37,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
             HttpMethod.PATCH.name(),
             HttpMethod.DELETE.name(),
     };
+
 
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
@@ -47,21 +54,16 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
     @Bean
     SecurityFilterChain resources (HttpSecurity http) throws Exception {
-        return http
+         http
+                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .authorizeRequests()
-                .antMatchers( "/**").permitAll()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                //.failureUrl("login") //if you want a separate page for failed auth.
-                .permitAll()
-                .and()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/") //.hasroles .and ant matchers
-                .permitAll()
-                .and().exceptionHandling().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class).build();
+                .antMatchers("**").permitAll()
+                 .anyRequest().authenticated()
+                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                ;
+
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+         return http.build();
     }
 
     @Override

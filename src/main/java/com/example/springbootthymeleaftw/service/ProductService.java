@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ProductService {
@@ -18,8 +21,6 @@ public class ProductService {
     private ProductRepository productRepository;
     @Autowired
     private BusinessRepository businessRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     public List<ProductEntity> getAllProductsofUserApproved(String username) {
         var products = productRepository.findAllByUsernameApproved(username);
@@ -43,6 +44,12 @@ public class ProductService {
     }
 
     @Transactional
+    public void buyStock(Long productId, int quantity)
+    {
+        productRepository.sellStocksWithId(productId,quantity);
+    }
+
+    @Transactional
     public void updateStock(long id, int stock) {
         int stockSaved = productRepository.getStockWithId(id);
         int newStock = stockSaved + stock;
@@ -57,6 +64,18 @@ public class ProductService {
     public List<ProductEntity> getAllBCProducts() {
         var products = productRepository.findAllProductsFromBC();
         return products.orElse(Collections.emptyList());
+    }
+
+    public List<ProductEntity> getAllBCProductsWithNames(List<String> names) {
+        List<ProductEntity> products = new ArrayList<>();
+        for(String name:names) {
+            var productsOpt = productRepository.findAllProductsFromBCWithNames(name);
+            if (productsOpt.isPresent()) {
+                products = Stream.concat(products.stream(), productsOpt.get().stream()).toList();
+            }
+        }
+
+        return products;
     }
 
     public boolean ValidateProduct(ProductEntity productEntity) {

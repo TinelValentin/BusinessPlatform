@@ -79,6 +79,13 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
             "where business_type like 'BC' and p.approved is NULL; ", nativeQuery = true)
     Optional<List<ProductEntity>> findAllProductsFromBC();
 
+    @Query(value = "Select * from product p inner join business b " +
+            "on p.business_id = b.id " +
+            "where b.company_name like :name and " +
+            "business_type like 'BC' and p.approved is NULL; ", nativeQuery = true)
+    Optional<List<ProductEntity>> findAllProductsFromBCWithNames(@Param("name") String companyName);
+
+
     @Transactional
     @Modifying
     @Query(value = "Update product p set stock = stock- :amount where p.id = :id", nativeQuery = true)

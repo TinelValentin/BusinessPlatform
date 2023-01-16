@@ -7,6 +7,7 @@ import com.example.springbootthymeleaftw.service.ProductService;
 import com.example.springbootthymeleaftw.service.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +25,7 @@ public class BBController {
     private final SecurityService securityService;
     private final ProductService productService;
 
+   @PreAuthorize("hasAuthority('ROLE_BB')")
     @GetMapping()
     public String open(Model model) {
 
@@ -32,6 +34,7 @@ public class BBController {
         return "bb";
     }
 
+    @PreAuthorize("hasAuthority('ROLE_BB')")
     @GetMapping("/error")
     public String error(Model model) {
 
@@ -41,6 +44,7 @@ public class BBController {
         return "bb";
     }
 
+    @PreAuthorize("hasAuthority('ROLE_BB')")
     @PostMapping()
     public String addProductForm(Model model, @ModelAttribute("Product") ProductEntity productForm) {
         model.addAttribute("addProduct", true);
@@ -57,6 +61,7 @@ public class BBController {
         return "bb";
     }
 
+    @PreAuthorize("hasAuthority('ROLE_BB')")
     @PostMapping(value = "/add/{id}")
     public String restock(@PathVariable Long id, Model model, int stock) {
         productService.updateStock(id, stock);

@@ -60,6 +60,29 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public UserDetails loadUserByName(String username) throws UsernameNotFoundException {
+        Optional<UserEntity> optUser = userRepository.findByUsername(username);
+
+        if (optUser.isPresent()) {
+            var test = userRepository.findRoleByEmail(username);
+            UserEntity appUser = optUser.get();
+            test.ifPresent(System.out::print);
+            return new User(
+                    appUser.getEmail(), appUser.getPassword(), true, true, true, true,
+                    /* User Roles */
+                    Objects.isNull(appUser.getRoles()) ?
+                            new ArrayList<>(List.of(new SimpleGrantedAuthority("default")))
+                            : appUser.getRoles()
+                            .stream()
+                            .map(RoleEntity::getName)
+                            .map(SimpleGrantedAuthority::new)
+                            .toList()
+            );
+        }
+        throw new UsernameNotFoundException(username);
+    }
+
+
     public void save(UserEntity user) {
         BusinessEntity userBusiness = businessRepository.findNonExistentBusiness();
         user.setBusiness(userBusiness);
