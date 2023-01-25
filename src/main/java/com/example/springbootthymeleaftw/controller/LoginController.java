@@ -49,7 +49,6 @@ public class LoginController {
 
        String token = securityService.generateToken(email,password);
        request.setAttribute("Authorization",token);
-        response.addHeader("Authorization", "test");
 
        return routerService.loginRoute();
     }

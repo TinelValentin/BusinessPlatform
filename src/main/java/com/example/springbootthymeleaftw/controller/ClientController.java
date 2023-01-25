@@ -41,20 +41,22 @@ public class ClientController {
 
     @PreAuthorize("hasAuthority('ROLE_CLIENT')")
     @PostMapping("/filter")
-    public String filter(Model model, @RequestParam List<String> selectFilter)
-    {
-        var products =productService.getAllBCProductsWithNames(selectFilter);
-        var businesses = businessService.findAllBuinessesBB();
-        model.addAttribute("products", products);
-        model.addAttribute("businesses", businesses);
+    public String filter(Model model, @RequestParam List<String> selectFilter) {
+        if (selectFilter != null) {
+            var products = productService.getAllBCProductsWithNames(selectFilter);
+            var businesses = businessService.findAllBuinessesBB();
+            model.addAttribute("products", products);
+            model.addAttribute("businesses", businesses);
+        } else {
+            setModel(model);
+        }
         return "client";
     }
 
     @PreAuthorize("hasAuthority('ROLE_CLIENT')")
     @PostMapping("/buy/{id}")
-    public String buyProduct(Model model,@PathVariable Long id, int quantity)
-    {
-        productService.buyStock(id,quantity);
+    public String buyProduct(Model model, @PathVariable Long id, int quantity) {
+        productService.buyStock(id, quantity);
         setModel(model);
 
         return "redirect:/client";

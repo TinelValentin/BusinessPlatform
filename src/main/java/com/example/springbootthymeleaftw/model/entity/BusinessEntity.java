@@ -24,7 +24,7 @@ public class BusinessEntity {
     private String address;
 
     @Basic
-    @Column(name = "id_code",unique = true)
+    @Column(name = "id_code")
     private String idCode;
 
     @Basic

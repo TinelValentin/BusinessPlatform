@@ -98,13 +98,8 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public void login(String email, String password){
-        UserDetails userDetails = this.loadUserByUsername(email);
-
-        if(Objects.isNull(userDetails))
-            return;
-
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+    public boolean existsUser(UserEntity user)
+    {
+        return userRepository.findByEmail(user.getEmail()).isPresent();
     }
 }

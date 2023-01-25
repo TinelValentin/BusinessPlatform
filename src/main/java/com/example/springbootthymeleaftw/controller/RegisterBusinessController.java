@@ -48,6 +48,11 @@ public class RegisterBusinessController {
         if (bindingResult.hasErrors())
             return "registerBusiness";
 
+        if(userService.existsUser(userForm))
+        {
+            bindingResult.rejectValue("email", "user.uniqueEmail");
+            return "register";
+        }
         String formRole = Objects.equals(businessForm.getBusinessType(), "BB") ? Role.ROLE_BB.toString() : Role.ROLE_BC.toString();
         Collection<RoleEntity> roles = new HashSet<>();
         Optional<RoleEntity> userRole = roleRepository.findByName(formRole);

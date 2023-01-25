@@ -42,7 +42,15 @@ public class RegisterController {
         userValidatorService.validate(userForm, bindingResult);
 
         if (bindingResult.hasErrors())
+        {
             return "register";
+        }
+
+        if(userService.existsUser(userForm))
+        {
+            bindingResult.rejectValue("email", "user.uniqueEmail");
+            return "register";
+        }
 
         String formRole =  Role.ROLE_CLIENT.toString();
         Collection<RoleEntity> roles = new HashSet<>();
